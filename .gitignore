@@ -1,9 +1,11 @@
 node_modules
 configs.js
 
+stt
 mp3s
 wavs
 ffmpeg
+msc*
 
 /[Ll]ibrary/
 /[Tt]emp/

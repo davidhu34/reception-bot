@@ -5,7 +5,7 @@ const qstr = require('querystring')
 const mp3Path = name => './mp3s/'+name+'.mp3'
 const wavPath = name => './wavs/'+name+'.wav'
 
-const tts = (text, fileName) => new Promise( (resolve, reject) => {
+const ttMP3 = (text, fileName) => new Promise( (resolve, reject) => {
 	const params = {
 		q: text,
 		ie: 'UTF-8',
@@ -28,7 +28,7 @@ const tts = (text, fileName) => new Promise( (resolve, reject) => {
 	})
 
 	request.get({
-		url: 'http://translate.google.com/translate_tts?' + qstr.stringify(params_full)
+		url: 'http://translate.google.com/translate_tts?' + qstr.stringify(params)
 	}).on('err', err => {
 		reject('Google translate API err: ' + err)
 	}).pipe(writeStream)
@@ -36,5 +36,5 @@ const tts = (text, fileName) => new Promise( (resolve, reject) => {
 })
 
 module.exports = {
-	tts: tts
+	ttMP3: ttMP3
 }
