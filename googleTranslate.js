@@ -1,0 +1,40 @@
+const fs = require('fs')
+const request = require('request')
+const qstr = require('querystring')
+
+const mp3Path = name => './mp3s/'+name+'.mp3'
+const wavPath = name => './wavs/'+name+'.wav'
+
+const tts = (text, fileName) => new Promise( (resolve, reject) => {
+	const params = {
+		q: text,
+		ie: 'UTF-8',
+		tl: 'zh'
+	}
+	const params_full = {
+		q: text,
+		ie: 'UTF-8',
+		tl: 'zh',
+		total: 1,
+		idx: 0,
+		textlen: 32,
+		client: 'tw-ob',
+	}
+
+	const writeStream = fs.createWriteStream(mp3Path(fileName))
+	writeStream.on('finish', () => {
+		console.log('Google translate tts get.')
+		resolve(fileName)
+	})
+
+	request.get({
+		url: 'http://translate.google.com/translate_tts?' + qstr.stringify(params_full)
+	}).on('err', err => {
+		reject('Google translate API err: ' + err)
+	}).pipe(writeStream)
+	
+})
+
+module.exports = {
+	tts: tts
+}

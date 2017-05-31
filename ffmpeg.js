@@ -6,7 +6,7 @@ const wavPath = name => './wavs/'+name+'.wav'
 const ffmpegPath = './ffmpeg/bin/ffmpeg.exe'
 const ffprobePath ='./ffmpeg/bin/ffprobe.exe'
 
-const convert = (file, toWav, callback) => {
+const convert = (file, toWav) => new Promise( (resolve, reject) => {
 	let source = ''
 	let format = ''
 	let dest = ''
@@ -27,21 +27,21 @@ const convert = (file, toWav, callback) => {
 	.toFormat('wav')
 	.save(dest)
 	.on('error', (err) => {
-	    console.log('Audio convert err:', err.message)
+	    reject('ffmpeg err: ' + err.message)
 	})
 	.on('progress', (progress) => {
 	    console.log('Audio converting:', progress.targetSize+' KB converted')
 	})
 	.on('end', (stdout, stderr) => {
-		console.log('stdout',stdout)
+		//console.log('stdout',stdout)
 		//console.log('stderr',stderr)
 	    console.log('Audio converted!')
-	    callback()
+	    resolve(file)
 	})
-}
+})
 
 
 module.exports = {
-	MP3toWAV: (file, cb) => convert(file, true, cb),
-	WAVtoMP3: (file, cb) => convert(file, false, cb)
+	MP3toWAV: (file) => convert(file, true),
+	WAVtoMP3: (file) => convert(file, false)
 }
