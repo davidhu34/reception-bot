@@ -5,7 +5,7 @@ class eventEmitter extends events {}
 
 module.exports = {
 	javaStt: () => {
-		const command = 'java -Dfile.encoding=UTF-8 -jar stt/iatSpeech.jar'
+		const command = 'java -Dfile.encoding=UTF-8 -jar ..\\iflystt\\iatSpeech.jar'
 		const stt = new eventEmitter()
 		stt.on('start', () => {
 			console.log('stt start')

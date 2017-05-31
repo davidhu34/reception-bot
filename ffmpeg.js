@@ -20,7 +20,7 @@ const convert = (file, toWav) => new Promise( (resolve, reject) => {
 		format = 'mp3'
 		dest = mp3Path(file)
 	}
-
+	console.log(source, format, dest)
 	ffmpeg(source)
 	.setFfmpegPath(ffmpegPath)
 	.setFfprobePath(ffprobePath)

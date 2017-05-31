@@ -7,7 +7,7 @@ const { ttMP3 } = require('./googleTranslate')
 module.exports = (content, fileName) =>
 	ttMP3(content, fileName)		// ttMP3 promise
 	.catch( err => {
-		console.log('tts err:',err)
+		console.log('ttMP3 err:',err)
 	}).then( name => {
 		return MP3toWAV(name)		// conversion promise
 	})

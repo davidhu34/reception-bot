@@ -28,7 +28,7 @@ const ttMP3 = (text, fileName) => new Promise( (resolve, reject) => {
 	})
 
 	request.get({
-		url: 'http://translate.google.com/translate_tts?' + qstr.stringify(params)
+		url: 'http://translate.google.com/translate_tts?' + qstr.stringify(params_full)
 	}).on('err', err => {
 		reject('Google translate API err: ' + err)
 	}).pipe(writeStream)

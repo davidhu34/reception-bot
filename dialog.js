@@ -2,13 +2,13 @@ const request = require('request')
 const events = require('events')
 class eventEmitter extends events {}
 const md5 = require('md5')
-const player = require('play-sound')()
+/*const player = require('play-sound')()
 const notify = cb => {
 	player.play('./notify.mp3', {timeout: 1000}, err => {
 		if(err) console.log('notify sound err:', err)
 		else cb()
 	})
-}
+}*/
 const { watch, unwatch } = require('melanke-watchjs')
 
 // event emitters
@@ -26,7 +26,7 @@ const ifly = require('./iflyQA')()
 const fbTextReply = require('./fbTextReply')
 
 let state = {
-	asleep: false,//true,
+	asleep: true,
 	speaking: false,
 	asking: null
 }
@@ -44,19 +44,25 @@ const hardcode = q => {
 
 waker.on('wake', () => {
 	if(state.asleep) {
-		notify(() => {
+		//notify(() => {
 			//light.emit('lit', 'on')
 			stt.emit('start')
 			state.asleep = false
-		})
+		//})
+	}
+})
+waker.on('sleep', () => {
+	if(!state.asleep) {
+		state.asleep = true
 	}
 })
 
 stt.on('result', result => {
 	const res = result.replace(/\s/g, '')
 	console.log('~'+res+'~')
-	if (!state.speaking) {
+	if (!state.speaking  && !state.asleep) {
 		if (res && res !== '。') {
+			const mid = md5(res+String(new Date()))
 			qs = {
 				ifly: null,
 				watson: null
@@ -72,11 +78,9 @@ stt.on('result', result => {
 						scriptLine = '預設對談'
 						break
 				}
-				const mid = md5(res+String(new Date()))
 				//notify(()=>{})
 				talker.emit('talk', scriptLine)
 			} else {
-				const mid = md5(res+String(new Date()))
 				//notify(()=>{})
 				console.log('to publish:', res)
 				conversation.publish('iot-2/evt/text/fmt/json', JSON.stringify({data:res, mid:mid}) )
@@ -160,7 +164,7 @@ talker.on('talk', line => {
 				unwatch(lines, id)
 			}
 		}
-		console.log('ttWav success:', line)
+		console.log('ttWav success:', line, name)
 		watch(lines, id, cue)
 		lines[id] = Object.keys(lines).length-1	
 	})
@@ -180,10 +184,15 @@ speaker.on('finish', () => {
 	if (!hasNext && qs.watson && qs.ifly) {
 		state.speaking = hasNext
 		state.asking = null
-		notify( () => {
+		//notify( () => {
 			stt.emit('start')
-		})
+		//})
 	}
 	//if (!state.asleep)
 	//	stt.emit('start')
 })
+
+module.exports = {
+	wake: () => waker.emit('wake'),
+	sleep: () => waker.emit('sleep')
+}

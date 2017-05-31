@@ -1,5 +1,6 @@
-const fs = require('fs')
 const wfi = require('wav-file-info')
+const fs = require('fs')
+const events = require('events')
 class eventEmitter extends events {}
 
 const speaker = new eventEmitter()
