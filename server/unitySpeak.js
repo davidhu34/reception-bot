@@ -14,7 +14,7 @@ speaker.on('speak', name => {
 			console.log('wrote for Unity: ', w)
 			setTimeout( () => {
 				speaker.emit('finish')
-			}, (info.duration+1)*1000)
+			}, (info.duration+0.5)*1000)
 		})
 	})
 })

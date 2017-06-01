@@ -84,7 +84,7 @@ public class runSalsa2 : MonoBehaviour {
 		//if (destroyed && !making && !salsa3D)
 		if (destroyed && !making )
 		{
-            Debug.Log("waiting for new");
+            //Debug.Log("waiting for new");
             DateTime newTime = File.GetLastWriteTimeUtc(txtDir);
             if (oldTime != newTime)
             {
