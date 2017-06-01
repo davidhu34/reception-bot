@@ -3,9 +3,11 @@ const exec = cp.exec
 const events = require('events')
 class eventEmitter extends events {}
 
+const { sttPath } = require('./configs')
+
 module.exports = {
 	javaStt: () => {
-		const command = 'java -Dfile.encoding=UTF-8 -jar ..\\iflystt\\iatSpeech.jar'
+		const command = sttPath
 		const stt = new eventEmitter()
 		stt.on('start', () => {
 			console.log('stt start')
