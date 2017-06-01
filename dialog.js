@@ -151,7 +151,6 @@ ifly.on('a', answer => {
 talker.on('talk', line => {
 	console.log('talker get', line)
 	const id = md5(String(new Date()))
-	
 	if(line) ttWav(line, 'toplay')
 	.catch( err => {
 		console.log('ttWav err:',err)

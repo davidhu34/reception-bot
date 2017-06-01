@@ -5,11 +5,12 @@ class eventEmitter extends events {}
 
 const speaker = new eventEmitter()
 speaker.on('speak', name => {
-	wfi.infoByFilename('wavs/'+name+'.wav', (err, info) => {
+	const w = name+'.wav'
+	wfi.infoByFilename('wavs/'+w, (err, info) => {
 		if (err) console.log(err)
-		fs.writeFile("wav/wavname.txt", name, (err) => {
+		fs.writeFile("wavs/playing.txt", w, (err) => {
 			if(err) return console.log(err)
-			console.log('wrote for Unity: ', name)
+			console.log('wrote for Unity: ', w)
 			setTimeout( () => {
 				speaker.emit('finish')
 			}, (info.duration+1)*1000)
