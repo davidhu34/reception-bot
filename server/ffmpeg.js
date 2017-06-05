@@ -5,7 +5,6 @@ const convert = (file, toWav) => new Promise( (resolve, reject) => {
 	let source = ''
 	let format = ''
 	let dest = ''
-
 	if (toWav) {
 		source = mp3Path(file)
 		format = 'wav'
@@ -15,13 +14,16 @@ const convert = (file, toWav) => new Promise( (resolve, reject) => {
 		format = 'mp3'
 		dest = mp3Path(file)
 	}
+	console.log('files:',source, dest)
 
+	let hasErr = false
 	ffmpeg(source)
 	.setFfmpegPath(ffmpegPath)
 	.setFfprobePath(ffprobePath)
 	.toFormat('wav')
 	.save(dest)
 	.on('error', (err) => {
+		hasErr = true
 	    reject('ffmpeg err: ' + err.message)
 	})
 	.on('progress', (progress) => {
@@ -31,7 +33,7 @@ const convert = (file, toWav) => new Promise( (resolve, reject) => {
 		//console.log('stdout',stdout)
 		//console.log('stderr',stderr)
 	    console.log('Audio converted!')
-	    resolve(file)
+	    if(!hasErr) resolve(file)
 	})
 })
 

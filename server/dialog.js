@@ -67,7 +67,7 @@ stt.on('result', result => {
 	const res = result.replace(/\s/g, '')
 	console.log('~'+res+'~')
 	if (!state.speaking  && !state.asleep) {
-		if (res && res !== '。') {
+		if (res && res.length > 1 && res !== '。') {
 			const mid = md5(res+String(new Date()))
 			qs = {
 				ifly: null,
@@ -94,7 +94,7 @@ stt.on('result', result => {
 					if(!qs.watson) {
 						console.log('6s time up watson')
 						qs.watson = 'noreply'
-						talker.emit('talk','')
+						speaker.emit('finish')
 					}
 				},6000)
 				ifly.emit('q',res)
@@ -112,7 +112,7 @@ iot.on('message', (topic, payloadBuffer) =>　{
 	if (payload.data) {
 		const {hasAnswer, help} = payload.data
 		const mid = payload.prev.mid
-		let speech = fbTextReply(payload)
+		let { speech, media } = fbTextReply(payload)
 	  	qs.watson = speech
 
 		if (speech && mid === state.asking && state.speaking) {
@@ -125,7 +125,10 @@ iot.on('message', (topic, payloadBuffer) =>　{
 				speech = body
 				console.log('watson A:',speech,'| hasA:',hasAnswer)
 				if (hasAnswer !== undefined && hasAnswer === false) {
-					watch(qs, 'ifly', (prop,action, val) => {
+					if(qs.ifly === 'noanswer' && speech) {
+						console.log('noanswer watson play')
+						talker.emit('talk', speech)
+					} else watch(qs, 'ifly', (prop,action, val) => {
 						if (val === 'noanswer' && speech) {
 							console.log('noanswer watson play')
 							talker.emit('talk', speech)

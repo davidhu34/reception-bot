@@ -2,11 +2,16 @@ const stockname = require('./tw_stockname.json')
 
 module.exports = payload => {
 	const { prev, type, data } = payload
+	let speech = ''
+	let media = null
+
 	switch (type) {
 		case 'websearch':
-			return data.result
+			speech = data.result
+			break
 		case 'weather':
-			return data.weather[0].narrative
+			speech = data.weather[0].narrative.replace('ºC','度')
+			break
 		case 'stock':
 			const stockCode = data.stock.split(':')
 			console.log(stockCode)
@@ -14,37 +19,41 @@ module.exports = payload => {
 				: data.name
 			const l = data.info.l
 			const c = data.info.c
-			return name+'股價為'+l+'元，'+'本日變化為'+c+'元'
+			speech = name+'股價為'+l+'元，'+'本日變化為'+c+'元'
+			break
 		case 'travel':
-			return data.places.map(
+			speech = data.places.map(
 				p => p.name
 			).join('，')
+			break
 		case 'movie':
-			return data.movies.map(
+			speech = data.movies.map(
 				m => m.original_title
 			).slice(0,3).join('，')
+			break
 		case 'news':
-			return data.news.map( n => {
+			speech = data.news.map( n => {
 				return n.title.split(' - ')[0]
 			}).slice(0,3).join('，')
+			break
 		case 'restaurant':
-			return data.restaurants.map( r => {
+			speech = data.restaurants.map( r => {
 				return r.name
 			}).slice(0,3).join('，')
+			break
 		case 'review':
-			return null
+			speech = null
+			break
 		case 'hsr':
-			return data.hsr
+			speech = data.hsr
+			break
 		case 'text':
 		default:
-			/*if (data.help) {
-				request.post({
-			  headers: {'content-type' : 'application/x-www-form-urlencoded'},
-			  url:     'http://cb8777d1.ngrok.io/chzw',
-			  body:    "text=简化字，民间俗稱"
-			}, function(error, response, body){
-			  console.log(body)
-			})
-			} else */return (data.text)?data.text: 'nulltext'
+			speech = (data.text)?data.text: 'nulltext'
+			break
+	}
+	return {
+		speech: speech,
+		media: media
 	}
 }
