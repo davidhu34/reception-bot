@@ -44,7 +44,9 @@ const hardcode = q => {
 
 waker.on('wake', (payload) => {
 	if(state.asleep) {
-		if(Object.keys(lines).length === 0) {
+		state.asleep = false
+		if(!payload) stt.emit('start')
+		else if(Object.keys(lines).length === 0) {
 			console.log('greeting:',payload.greeting)
 			qs = {
 				watson: 'greeting',
@@ -52,7 +54,6 @@ waker.on('wake', (payload) => {
 			}
 			talker.emit('talk', payload.greeting)
 		}
-		state.asleep = false
 	}
 
 })
@@ -171,7 +172,7 @@ talker.on('talk', line => {
 			console.log('watch change', line, newQ, id)
 			if( newQ === 0 ) {
 				console.log('to speak:', line)
-				speaker.emit('speak', name)
+				speaker.emit('speak', name, line)
 				unwatch(lines, id)
 			}
 		}
@@ -196,7 +197,9 @@ speaker.on('finish', () => {
 		state.speaking = hasNext
 		state.asking = null
 		//notify( () => {
-			stt.emit('start')
+		speaker.emit('reset',
+			() => stt.emit('start')
+		)
 		//})
 	}
 	//if (!state.asleep)
@@ -204,6 +207,6 @@ speaker.on('finish', () => {
 })
 
 module.exports = {
-	wake: () => waker.emit('wake', payload),
+	wake: (payload) => waker.emit('wake', payload),
 	sleep: () => waker.emit('sleep')
 }

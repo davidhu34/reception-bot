@@ -2,8 +2,8 @@ const { MP3toWAV, WAVtoMP3 } = require('./ffmpeg')
 const { ttMP3 } = require('./googleTranslate') 
 const dialog = require('./dialog')
 
-dialog.sleep()
-//dialog.wake()
+//dialog.sleep()
+dialog.wake(null)
 
 /*
 const fileName = 'test'
