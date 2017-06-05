@@ -76,7 +76,7 @@ public class runSalsa2 : MonoBehaviour {
         if (!playing && !destroyed)
         {
             Debug.Log("Play");
-			Debug.Log(destroyed);
+			//Debug.Log(destroyed);
             playing = true;
 			anim.SetBool("talking", true);
             salsa3D.Play();
@@ -88,9 +88,9 @@ public class runSalsa2 : MonoBehaviour {
             DateTime newTime = File.GetLastWriteTimeUtc(txtDir);
             if (oldTime != newTime)
             {
-                Debug.Log("oldyime" + oldTime);
+                //Debug.Log("oldyime" + oldTime);
                 oldTime = newTime;
-                Debug.Log("newtime" + oldTime);
+                //Debug.Log("newtime" + oldTime);
                 making = true;
 				txtfile = new WWW("file://" + txtDir);
 				while (!txtfile.isDone) { };

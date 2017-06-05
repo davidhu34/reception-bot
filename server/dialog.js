@@ -135,7 +135,7 @@ iot.on('message', (topic, payloadBuffer) =>　{
 						}
 						unwatch(qs, 'ifly')
 					})
-				} else talker.emit('talk', speech)
+				} else talker.emit('talk', speech, media)
 			})
 		} else if ( payload.type !== 'review' && state.speaking && mid === state.asking) {
 			qs.watson = 'nullreply'
@@ -164,7 +164,7 @@ ifly.on('a', answer => {
 })
 
 
-talker.on('talk', line => {
+talker.on('talk', (line, media) => {
 	console.log('talker get', line)
 	const id = md5(String(new Date()))
 	if(line) ttWav(line, 'toplay')
@@ -176,6 +176,7 @@ talker.on('talk', line => {
 			if( newQ === 0 ) {
 				console.log('to speak:', line)
 				speaker.emit('speak', name, line)
+				speaker.emit('display', media)
 				unwatch(lines, id)
 			}
 		}

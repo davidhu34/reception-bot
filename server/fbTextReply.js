@@ -10,7 +10,9 @@ module.exports = payload => {
 			speech = data.result
 			break
 		case 'weather':
+		console.log(data.weather)
 			speech = data.weather[0].narrative.replace('ºC','度')
+			media = data.weather[0].imageUrl
 			break
 		case 'stock':
 			const stockCode = data.stock.split(':')

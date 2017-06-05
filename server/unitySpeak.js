@@ -2,7 +2,7 @@ const wfi = require('wav-file-info')
 const fs = require('fs')
 const events = require('events')
 class eventEmitter extends events {}
-const { wavPath, speakPath, subtitlePath } = require('./configs')
+const { wavPath, speakPath, subtitlePath, displayPath } = require('./configs')
 const player = require('play-sound')()
 
 const play = dir => 
@@ -28,6 +28,13 @@ speaker.on('speak', (name, line) => {
 		fs.writeFile(subtitlePath, line, 'ucs2', err => {
 			if (err) throw err
 		})
+	})
+})
+
+speaker.on('display', media => {
+	fs.writeFile(displayPath, media, 'ucs2', err => {
+		if(err) return console.log(err)
+		console.log('wrote media for Unity: ', media)
 	})
 })
 
