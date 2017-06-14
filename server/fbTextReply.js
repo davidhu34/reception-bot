@@ -43,6 +43,11 @@ module.exports = payload => {
 				return r.name
 			}).slice(0,3).join('，')
 			break
+		case 'location':
+			speech = data.restaurants.map( r => {
+				return r.name+'在'+r.formatted_address
+			}).slice(0,3).join('，')
+			break
 		case 'review':
 			speech = null
 			break

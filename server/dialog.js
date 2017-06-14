@@ -66,7 +66,7 @@ waker.on('sleep', () => {
 stt.on('result', result => {
 	const res = result.replace(/\s/g, '')
 	console.log('~'+res+'~')
-	if (!state.speaking  && !state.asleep) {
+	if (!state.speaking && !state.asleep) {
 		if (res && res.length > 1 && res !== '。') {
 			const mid = md5(res+String(new Date()))
 			qs = {
