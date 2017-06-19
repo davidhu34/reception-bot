@@ -49,6 +49,9 @@ speaker.on('reset', next => {
 	fs.writeFile(statusPath, 'listening', 'ucs2', err => {
 		if (err) throw err
 	})
+	fs.writeFile(displayPath, 'null', 'ucs2', err => {
+		if (err) throw err
+	})
 
 
 })

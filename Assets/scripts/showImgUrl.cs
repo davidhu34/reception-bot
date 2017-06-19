@@ -13,6 +13,7 @@ public class showImgUrl : MonoBehaviour {
 	public RawImage show;
 	public string name;
 
+	private string ibm = "http://diylogodesigns.com/blog/wp-content/uploads/2016/04/ibm-logo-png-transparent-background.png";
 	private string url = "http://diylogodesigns.com/blog/wp-content/uploads/2016/04/ibm-logo-png-transparent-background.png";
 	private string txtDir;
 	private Text cc;
@@ -23,6 +24,8 @@ public class showImgUrl : MonoBehaviour {
 	IEnumerator Show () {
 		Texture2D tex = new Texture2D (100, 100, TextureFormat.DXT1, false);
 		Debug.Log ("displaying img");
+		if (url == "null" || url == "undefined" || url == null)
+			url = ibm;
 		img = new WWW(url);
 		yield return img;
 		img.LoadImageIntoTexture (tex);
@@ -33,7 +36,10 @@ public class showImgUrl : MonoBehaviour {
 	}
 	// Use this for initialization
 	void Start () {
-		txtDir = Application.dataPath.Substring(0, Application.dataPath.LastIndexOf("/")) + "/"+name+".txt";
+		string path = Application.dataPath.Substring (0, Application.dataPath.LastIndexOf ("/")) + "/"; 
+		txtDir = path + name + ".txt";
+		ibm = "file://" + path + "ibm.png";
+		url = ibm;
 		oldTime = File.GetLastWriteTimeUtc (txtDir);
 		StartCoroutine(Show ());
 	}
