@@ -176,7 +176,7 @@ talker.on('talk', (line, media) => {
 			if( newQ === 0 ) {
 				console.log('to speak:', line)
 				speaker.emit('speak', name, line)
-				speaker.emit('display', media)
+				if (media) speaker.emit('display', media)
 				unwatch(lines, id)
 			}
 		}

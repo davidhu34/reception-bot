@@ -10,7 +10,7 @@ using UnityEngine.Windows;
 
 using CrazyMinnow.SALSA; // Import SALSA from the CrazyMinnow namespace
 
-public class runSalsa : MonoBehaviour {
+public class runSalsa2 : MonoBehaviour {
 
 	private string clipName = "dialog.wav";
 	private string clipDir;

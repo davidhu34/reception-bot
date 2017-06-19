@@ -2,7 +2,7 @@ const wfi = require('wav-file-info')
 const fs = require('fs')
 const events = require('events')
 class eventEmitter extends events {}
-const { wavPath, speakPath, subtitlePath, displayPath } = require('./configs')
+const { wavPath, speakPath, subtitlePath, displayPath, statusPath } = require('./configs')
 const player = require('play-sound')()
 
 const play = dir => 
@@ -28,6 +28,9 @@ speaker.on('speak', (name, line) => {
 		fs.writeFile(subtitlePath, line, 'ucs2', err => {
 			if (err) throw err
 		})
+		fs.writeFile(statusPath, 'speaking', 'ucs2', err => {
+			if (err) throw err
+		})
 	})
 })
 
@@ -43,6 +46,10 @@ speaker.on('reset', next => {
 		if (err) throw err
 		else next()
 	})
+	fs.writeFile(statusPath, 'listening', 'ucs2', err => {
+		if (err) throw err
+	})
+
 
 })
 

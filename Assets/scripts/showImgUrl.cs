@@ -26,6 +26,7 @@ public class showImgUrl : MonoBehaviour {
 		img = new WWW(url);
 		yield return img;
 		img.LoadImageIntoTexture (tex);
+		yield return tex;
 		Debug.Log (img);
 		//yield return img;
 		show.texture = tex;

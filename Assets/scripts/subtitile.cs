@@ -22,7 +22,11 @@ public class subtitile : MonoBehaviour {
 		oldTime = File.GetLastWriteTimeUtc (txtDir);
 		cc = gameObject.GetComponent<Text> ();
 	}
-	
+	IEnumerator updateFile () {
+		txtFile = new WWW("file://" + txtDir);
+		yield return txtFile;
+		cc.text = Encoding.Unicode.GetString ( File.ReadAllBytes (txtDir));
+	}
 	// Update is called once per frame
 	void Update () {
 		DateTime newTime = File.GetLastWriteTimeUtc(txtDir);
@@ -30,9 +34,7 @@ public class subtitile : MonoBehaviour {
 		{
 			Debug.Log("oldyime"+oldTime);
 			oldTime = newTime;
-			txtFile = new WWW("file://" + txtDir);
-			while (!txtFile.isDone) { };
-			cc.text = Encoding.Unicode.GetString ( File.ReadAllBytes (txtDir));
+			StartCoroutine (updateFile ());
 			Debug.Log("newtime"+oldTime);
 		}
 	}
