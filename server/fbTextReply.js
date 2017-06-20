@@ -10,7 +10,6 @@ module.exports = payload => {
 			speech = data.result
 			break
 		case 'weather':
-		console.log(data.weather)
 			speech = data.weather[0].narrative.replace('ºC','度')
 			media = data.weather[0].imageUrl
 			break
@@ -44,9 +43,8 @@ module.exports = payload => {
 			}).slice(0,3).join('，')
 			break
 		case 'location':
-			speech = data.restaurants.map( r => {
-				return r.name+'在'+r.formatted_address
-			}).slice(0,3).join('，')
+			speech = '參考地圖'
+			media = data.map
 			break
 		case 'review':
 			speech = null

@@ -267,11 +267,11 @@ module.exports = iot => {
 					}
 				})*/
 				const result = JSON.parse(body)
-				ifly.emit('a', result.text)
 				if(result.topic) {
 					//console.log('has topic ifly',iot)
 					ifly.emit('iot', result)
-				}
+				} else
+					ifly.emit('a', result.text)
 			}
 		})
 	})

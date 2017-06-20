@@ -18,12 +18,13 @@ speaker.on('speak', (name, line) => {
 	//play(wavPath(name))/*
 	wfi.infoByFilename(wavPath(name), (err, info) => {
 		if (err) console.log(err)
+		else console.log(name, info)
 		fs.writeFile(speakPath, w, (err) => {
 			if(err) return console.log(err)
 			console.log('wrote for Unity: ', w)
 			setTimeout( () => {
 				speaker.emit('finish')
-			}, (info.duration+0.5)*1000)
+			}, (info.duration+1)*1000)
 		})
 		fs.writeFile(subtitlePath, line, 'ucs2', err => {
 			if (err) throw err

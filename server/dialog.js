@@ -113,9 +113,11 @@ iot.on('message', (topic, payloadBuffer) =>　{
 		const {hasAnswer, help} = payload.data
 		const mid = payload.prev.mid
 		let { speech, media } = fbTextReply(payload)
-	  	qs.watson = speech
+
 
 		if (speech && mid === state.asking && state.speaking) {
+		  	if(payload.type === 'restaurant') qs.ifly = 'restaurant'
+		  	else qs.watson = speech
 			request.post({
 			  headers: {'content-type' : 'application/x-www-form-urlencoded'},
 			  url:     'http://119.81.236.205:3998/chzw',
@@ -123,7 +125,7 @@ iot.on('message', (topic, payloadBuffer) =>　{
 			}, function(error, response, body){
 				console.log('chzw:',body)
 				speech = body
-				console.log('watson A:',speech,'| hasA:',hasAnswer)
+				console.log('watson A:',speech,'| hasA:',hasAnswer, qs)
 				if (hasAnswer !== undefined && hasAnswer === false) {
 					if(qs.ifly === 'noanswer' && speech) {
 						console.log('noanswer watson play')
@@ -152,12 +154,13 @@ ifly.on('iot', res => {
 	console.log('ifly iot:', res)
 	let p = JSON.parse(res.payload)
 	p.mid = state.asking
-	//qs.watson = null
+	//qs.ifly = 'iot'
 	iot.publish(res.topic, JSON.stringify(p))
 })
 ifly.on('a', answer => {
 	console.log('ifly A:', answer)
 	if(answer) {
+		if (answer.indexOf('為你找尋') === -1) return
 		qs.ifly = answer
 		talker.emit('talk', answer)
 	} else qs.ifly = 'noanswer'
