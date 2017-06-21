@@ -11,7 +11,11 @@ using UnityEngine.Windows;
 
 public class showImgUrl : MonoBehaviour {
 	public RawImage show;
+	public RectTransform rt;
+	private Rect rect; 
 	public string name;
+	private float w = 200;
+	private float h = 100;
 
 	private string ibm = "http://diylogodesigns.com/blog/wp-content/uploads/2016/04/ibm-logo-png-transparent-background.png";
 	private string url = "http://diylogodesigns.com/blog/wp-content/uploads/2016/04/ibm-logo-png-transparent-background.png";
@@ -22,12 +26,21 @@ public class showImgUrl : MonoBehaviour {
 	private DateTime oldTime;
 
 	IEnumerator Show () {
-		Texture2D tex = new Texture2D (100, 100, TextureFormat.DXT1, false);
+		
 		Debug.Log ("displaying img");
 		if (url == "null" || url == "undefined" || url == null)
 			url = ibm;
 		img = new WWW(url);
 		yield return img;
+		int iw = img.texture.width;
+		int ih = img.texture.height;
+		if (ih > 200) {
+			ih = 200;
+			iw = (int) (200f*(iw/ih));
+			Debug.Log (iw);
+		}
+		rt.sizeDelta = new Vector2(iw, ih);
+		Texture2D tex = new Texture2D ((int)iw, (int)ih, TextureFormat.DXT1, false);
 		img.LoadImageIntoTexture (tex);
 		yield return tex;
 		Debug.Log (img);
@@ -36,6 +49,10 @@ public class showImgUrl : MonoBehaviour {
 	}
 	// Use this for initialization
 	void Start () {
+		rect = rt.rect;
+		w = rect.width;
+		h = rect.height;
+		
 		string path = Application.dataPath.Substring (0, Application.dataPath.LastIndexOf ("/")) + "/"; 
 		txtDir = path + name + ".txt";
 		ibm = "file://" + path + "ibm.png";

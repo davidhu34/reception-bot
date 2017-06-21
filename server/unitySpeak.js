@@ -12,13 +12,17 @@ const play = dir =>
 	})
 
 const speaker = new eventEmitter()
-
+speaker.on('question', q => {
+	const line = 'Q:\"'+q+'\"'
+	fs.writeFile(subtitlePath, q, 'ucs2', err => {
+		if (err) throw err
+	})
+})
 speaker.on('speak', (name, line) => {
 	const w = name+'.wav'
 	//play(wavPath(name))/*
 	wfi.infoByFilename(wavPath(name), (err, info) => {
 		if (err) console.log(err)
-		else console.log(name, info)
 		fs.writeFile(speakPath, w, (err) => {
 			if(err) return console.log(err)
 			console.log('wrote for Unity: ', w)

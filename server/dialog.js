@@ -75,7 +75,8 @@ stt.on('result', result => {
 			}
 			state.speaking = true
 			state.asking = mid
-		
+			speaker.emit('question', res)
+
 			const scripted = hardcode(res)
 			if (scripted) {
 				let scriptLine = ''
@@ -116,7 +117,7 @@ iot.on('message', (topic, payloadBuffer) =>　{
 
 
 		if (speech && mid === state.asking && state.speaking) {
-		  	if(payload.type === 'restaurant') qs.ifly = 'restaurant'
+		  	if(payload.type === 'restaurant' || payload.type === 'location') qs.ifly = 'iot'
 		  	else qs.watson = speech
 			request.post({
 			  headers: {'content-type' : 'application/x-www-form-urlencoded'},
@@ -160,7 +161,7 @@ ifly.on('iot', res => {
 ifly.on('a', answer => {
 	console.log('ifly A:', answer)
 	if(answer) {
-		if (answer.indexOf('為你找尋') === -1) return
+		if (answer.indexOf('為你找尋') > -1) return
 		qs.ifly = answer
 		talker.emit('talk', answer)
 	} else qs.ifly = 'noanswer'
