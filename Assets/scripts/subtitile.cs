@@ -32,10 +32,10 @@ public class subtitile : MonoBehaviour {
 		DateTime newTime = File.GetLastWriteTimeUtc(txtDir);
 		if (oldTime != newTime)
 		{
-			Debug.Log("oldyime"+oldTime);
+			//Debug.Log("oldyime"+oldTime);
 			oldTime = newTime;
 			StartCoroutine (updateFile ());
-			Debug.Log("newtime"+oldTime);
+			//Debug.Log("newtime"+oldTime);
 		}
 	}
 }

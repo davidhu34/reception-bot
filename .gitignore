@@ -2,10 +2,12 @@ node_modules
 configs.js
 subtitle.txt
 display.txt
+status.txt
 
 stt
 mp3s
 wavs
+cfimg
 ffmpeg
 msc*
 rcptn*
@@ -42,6 +44,8 @@ ExportedObj/
 *.booproj
 *.svd
 *.pdb
+*.png
+*.jpg
 
 
 # Unity3D generated meta files

@@ -43,8 +43,33 @@ module.exports = payload => {
 			}).slice(0,3).join('，')
 			break
 		case 'location':
-			speech = '參考地圖'
-			media = data.map
+			if (data.location === 'reception') {
+				switch(data.map) {
+					case 'mailroom':
+						speech = '面對櫃台右手邊走廊直走就到了'
+						media = '/floor.jpg'
+						break
+					case 'WC':
+						speech = '旁邊大門出去兩邊走廊都有喔'
+						media = '/WC.jpg'
+						break
+					case 'water':
+					case 'security':
+						speech = '飲水機和安全室在我右手邊往後走'
+						media = '/floor.jpg'
+						break
+					case 'none':
+						speech = '我沒去過那裡呢，參考一下樓層圖或問櫃台姐姐吧'
+						media = '/floor.jpg'
+						break
+					default:
+						speech = '參考地圖，走道牆上也有樓層圖和標示呦'
+						media = '/'+data.map+'.jpg'
+				}
+			} else {
+				speech = '參考一下地圖'
+				media = data.map
+			}
 			break
 		case 'review':
 			speech = null

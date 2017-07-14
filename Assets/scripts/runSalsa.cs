@@ -77,7 +77,7 @@ public class runSalsa : MonoBehaviour {
 	{
 		if (!playing && audioReady)
 		{
-			Debug.Log("Play");
+			//Debug.Log("Play");
 			playing = true;
 			anim.SetBool("talking", true);
 			salsa3D.Play();
@@ -86,7 +86,7 @@ public class runSalsa : MonoBehaviour {
 		{
 			playing = false;
 			audioReady = false;
-			Debug.Log ("end");
+			//Debug.Log ("end");
 			anim.SetBool("talking", false);
 		}
 

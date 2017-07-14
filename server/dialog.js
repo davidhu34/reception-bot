@@ -116,7 +116,7 @@ iot.on('message', (topic, payloadBuffer) =>　{
 		let { speech, media } = fbTextReply(payload)
 
 
-		if (speech && mid === state.asking && state.speaking) {
+		if (speech && speech !== 'nulltext' && mid === state.asking && state.speaking && speech.length < 40) {
 		  	if(payload.type === 'restaurant' || payload.type === 'location') qs.ifly = 'iot'
 		  	else qs.watson = speech
 			request.post({
@@ -160,7 +160,7 @@ ifly.on('iot', res => {
 })
 ifly.on('a', answer => {
 	console.log('ifly A:', answer)
-	if(answer) {
+	if(answer && answer.length < 40) {
 		if (answer.indexOf('為你找尋') > -1) return
 		qs.ifly = answer
 		talker.emit('talk', answer)
@@ -201,7 +201,7 @@ speaker.on('finish', () => {
 		}
 	})
 	console.log('on finish:',qs.watson, qs.ifly, hasNext )
-	if (!hasNext && qs.watson && qs.ifly) {
+	if (!hasNext && qs.watson && qs.ifly && state.asking) {
 		state.speaking = hasNext
 		state.asking = null
 		//notify( () => {

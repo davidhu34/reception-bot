@@ -14,6 +14,7 @@ public class showImgUrl : MonoBehaviour {
 	public RectTransform rt;
 	private Rect rect; 
 	public string name;
+	private string path;
 	private float w = 200;
 	private float h = 100;
 
@@ -25,11 +26,12 @@ public class showImgUrl : MonoBehaviour {
 	private WWW txtFile;
 	private DateTime oldTime;
 
-	IEnumerator Show () {
-		
-		Debug.Log ("displaying img");
+	IEnumerator Show () {		
 		if (url == "null" || url == "undefined" || url == null)
 			url = ibm;
+		if (url [0] == '/')
+			url = "file://" + path + "/cfimg" + url;
+		Debug.Log (url);
 		img = new WWW(url);
 		yield return img;
 		int iw = img.texture.width;
@@ -39,12 +41,10 @@ public class showImgUrl : MonoBehaviour {
 			iw = (int) (200f*(iw/ih));
 			Debug.Log (iw);
 		}
-		rt.sizeDelta = new Vector2(iw, ih);
+		rt.sizeDelta = new Vector2 (600, 400);//(iw, ih);
 		Texture2D tex = new Texture2D ((int)iw, (int)ih, TextureFormat.DXT1, false);
 		img.LoadImageIntoTexture (tex);
 		yield return tex;
-		Debug.Log (img);
-		//yield return img;
 		show.texture = tex;
 	}
 	// Use this for initialization
@@ -53,9 +53,9 @@ public class showImgUrl : MonoBehaviour {
 		w = rect.width;
 		h = rect.height;
 		
-		string path = Application.dataPath.Substring (0, Application.dataPath.LastIndexOf ("/")) + "/"; 
-		txtDir = path + name + ".txt";
-		ibm = "file://" + path + "ibm.png";
+		path = Application.dataPath.Substring (0, Application.dataPath.LastIndexOf ("/")); 
+		txtDir = path + "/" + name + ".txt";
+		ibm = "file://" + path + "/" + "blank.png";
 		url = ibm;
 		oldTime = File.GetLastWriteTimeUtc (txtDir);
 		StartCoroutine(Show ());
@@ -66,13 +66,10 @@ public class showImgUrl : MonoBehaviour {
 		DateTime newTime = File.GetLastWriteTimeUtc(txtDir);
 		if (oldTime != newTime)
 		{
-			Debug.Log("oldtime"+oldTime);
 			oldTime = newTime;
 			txtFile = new WWW("file://" + txtDir);
 			while (!txtFile.isDone) { };
 			url = Encoding.Unicode.GetString ( File.ReadAllBytes (txtDir));
-			Debug.Log (url);
-			Debug.Log("newtime"+oldTime);
 			StartCoroutine(Show ());
 		}
 	}
