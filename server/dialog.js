@@ -116,7 +116,7 @@ iot.on('message', (topic, payloadBuffer) =>　{
 		let { speech, media } = fbTextReply(payload)
 
 
-		if (speech && speech !== 'nulltext' && mid === state.asking && state.speaking && speech.length < 40) {
+		if (speech && speech !== 'nulltext' && mid === state.asking && state.speaking && speech.length < 70) {
 		  	if(payload.type === 'restaurant' || payload.type === 'location') qs.ifly = 'iot'
 		  	else qs.watson = speech
 			request.post({
@@ -155,7 +155,7 @@ ifly.on('iot', res => {
 	console.log('ifly iot:', res)
 	let p = JSON.parse(res.payload)
 	p.mid = state.asking
-	//qs.ifly = 'iot'
+	qs.ifly = 'iot'
 	iot.publish(res.topic, JSON.stringify(p))
 })
 ifly.on('a', answer => {

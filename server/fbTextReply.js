@@ -1,5 +1,20 @@
 const stockname = require('./tw_stockname.json')
-
+const ENstock = stock => {
+	let s = stock.toLowerCase()
+	if (s.indexOf('international business machine') > -1)
+		return 'IBM'
+	else if (s.indexOf('microsoft') > -1)
+		return '微軟'
+	else if (s.indexOf('amazon') > -1)
+		return '亞馬遜'
+	else if (s.indexOf('alphabet') > -1)
+		return '谷歌'
+	else if (s.indexOf('facebook') > -1)
+		return 'facebook'
+	else if (s.indexOf('tesla') > -1)
+		return '特斯拉'
+	else return stock
+}
 module.exports = payload => {
 	const { prev, type, data } = payload
 	let speech = ''
@@ -17,7 +32,7 @@ module.exports = payload => {
 			const stockCode = data.stock.split(':')
 			console.log(stockCode)
 			const name = stockCode[0] === 'TPE'? stockname[stockCode[1]]
-				: data.name
+				: ENstock(data.name)
 			const l = data.info.l
 			const c = data.info.c
 			speech = name+'股價為'+l+'元，'+'本日變化為'+c+'元'
