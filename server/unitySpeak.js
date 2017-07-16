@@ -51,14 +51,14 @@ speaker.on('reset', next => {
 		if (err) throw err
 		else next()
 	})
-	fs.writeFile(statusPath, 'listening', 'ucs2', err => {
-		if (err) throw err
-	})
-	fs.writeFile(displayPath, 'null', 'ucs2', err => {
-		if (err) throw err
-	})
-
-
+	setTimeout(() => {
+		fs.writeFile(statusPath, 'listening', 'ucs2', err => {
+			if (err) throw err
+		})
+		fs.writeFile(displayPath, 'null', 'ucs2', err => {
+			if (err) throw err
+		})
+	}, 300)
 })
 
 module.exports = speaker

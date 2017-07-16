@@ -91,14 +91,21 @@ stt.on('result', result => {
 				//notify(()=>{})
 				console.log('to publish:', res)
 				iot.publish('iot-2/evt/text/fmt/json', JSON.stringify({data:res, mid:mid}) )
-				setTimeout(() => {
-					if(!qs.watson) {
-						console.log('6s time up watson')
-						qs.watson = 'noreply'
-						speaker.emit('finish')
-					}
-				},6000)
 				ifly.emit('q',res)
+				setTimeout(() => {
+					console.log('timeout check', qs.watson? 1:0, qs.ifly? 1:0)
+					const w = qs.watson? true: false
+					const i = qs.ifly && qs.ifly !== 'noanswer'? true: false
+
+					if( state.asking && (!w || !i ) ) {
+						console.log('5s time up watson')
+						qs.watson = 'noreply'
+						qs.ifly = 'noansewr'
+						const emitting = !w && !i? '不好意思這個我還沒學會呢，能再試試看嗎?': ''
+						talker.emit('talk', emitting)
+						//speaker.emit('finish')
+					}
+				}, 4000)
 			}
 		} else {
 			stt.emit('start')
@@ -118,7 +125,7 @@ iot.on('message', (topic, payloadBuffer) =>　{
 
 		if (speech && speech !== 'nulltext' && mid === state.asking && state.speaking && speech.length < 70) {
 		  	if(payload.type === 'restaurant' || payload.type === 'location') qs.ifly = 'iot'
-		  	else qs.watson = speech
+		  	qs.watson = speech
 			request.post({
 			  headers: {'content-type' : 'application/x-www-form-urlencoded'},
 			  url:     'http://119.81.236.205:3998/chzw',
@@ -155,7 +162,7 @@ ifly.on('iot', res => {
 	console.log('ifly iot:', res)
 	let p = JSON.parse(res.payload)
 	p.mid = state.asking
-	qs.ifly = 'iot'
+	//qs.ifly = 'iot'
 	iot.publish(res.topic, JSON.stringify(p))
 })
 ifly.on('a', answer => {

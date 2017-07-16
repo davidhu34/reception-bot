@@ -25,7 +25,7 @@ module.exports = payload => {
 			speech = data.result
 			break
 		case 'weather':
-			speech = data.weather[0].narrative.replace('ºC','度')
+			speech = data.weather[0].narrative.replace(/ºC/gi,'度')
 			media = data.weather[0].imageUrl
 			break
 		case 'stock':
@@ -38,22 +38,27 @@ module.exports = payload => {
 			speech = name+'股價為'+l+'元，'+'本日變化為'+c+'元'
 			break
 		case 'travel':
-			speech = data.places.map(
+			speech = '看看這些地方吧：' + data.places.map(
 				p => p.name
 			).join('，')
 			break
 		case 'movie':
-			speech = data.movies.map(
+			speech = '最近有這些電影：' + data.movies.map(
 				m => m.original_title
 			).slice(0,3).join('，')
 			break
 		case 'news':
-			speech = data.news.map( n => {
+		console.log('here	')
+			speech = '我找到今天新聞：' + data.news.map( n => {
+
+				console.log(n.name)
 				return n.title.split(' - ')[0]
-			}).slice(0,3).join('，')
+			}).slice(0,2).join('，')
+
+			console.log(speech)
 			break
 		case 'restaurant':
-			speech = data.restaurants.map( r => {
+			speech = '我找到一些餐廳：'+data.restaurants.map( r => {
 				return r.name
 			}).slice(0,3).join('，')
 			break
