@@ -101,9 +101,10 @@ stt.on('result', result => {
 						console.log('5s time up watson')
 						qs.watson = 'noreply'
 						qs.ifly = 'noansewr'
-						const emitting = !w && !i? '不好意思這個我還沒學會呢，能再試試看嗎?': ''
-						talker.emit('talk', emitting)
-						//speaker.emit('finish')
+						/*const emitting = !w && !i? '不好意思這個我還沒學會呢，能再試試看嗎?': ''
+						talker.emit('talk', emitting)*/
+						if (!w && !i) talker.emit('talk', '不好意思這個我還沒學會呢，能再試試看嗎?')
+						else if (Object.keys(lines).length === 0) speaker.emit('finish')
 					}
 				}, 4000)
 			}
@@ -135,7 +136,7 @@ iot.on('message', (topic, payloadBuffer) =>　{
 				speech = body
 				console.log('watson A:',speech,'| hasA:',hasAnswer, qs)
 				if (hasAnswer !== undefined && hasAnswer === false) {
-					if(qs.ifly === 'noanswer' && speech) {
+					if(qs.ifly && qs.ifly === 'noanswer' && speech) {
 						console.log('noanswer watson play')
 						talker.emit('talk', speech)
 					} else watch(qs, 'ifly', (prop,action, val) => {
