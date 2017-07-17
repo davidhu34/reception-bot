@@ -9,6 +9,16 @@ const notify = cb => {
 		else cb()
 	})
 }*/
+const validIfly = a => {
+	return a.indexOf('提倡文明語言') === -1
+}
+const unknown = () => {
+	return [
+		'不好意思這個我還沒學會呢，能再試試看嗎?',
+		'抱歉這個我還不會這個呢，也可能是我沒有聽清楚問題',
+		'抱歉，我還不會回答這個問題，也有可能是沒聽清楚喔'
+	][Math.floor(Math.random()*3)]
+}
 const { watch, unwatch } = require('melanke-watchjs')
 
 // event emitters
@@ -103,7 +113,7 @@ stt.on('result', result => {
 						qs.ifly = 'noansewr'
 						/*const emitting = !w && !i? '不好意思這個我還沒學會呢，能再試試看嗎?': ''
 						talker.emit('talk', emitting)*/
-						if (!w && !i) talker.emit('talk', '不好意思這個我還沒學會呢，能再試試看嗎?')
+						if (!w && !i) talker.emit('talk', unknown())
 						else if (Object.keys(lines).length === 0) speaker.emit('finish')
 					}
 				}, 4000)
@@ -168,7 +178,7 @@ ifly.on('iot', res => {
 })
 ifly.on('a', answer => {
 	console.log('ifly A:', answer)
-	if(answer && answer.length < 40) {
+	if(answer && validIfly(answer) && answer.length < 40) {
 		if (answer.indexOf('為你找尋') > -1) return
 		qs.ifly = answer
 		talker.emit('talk', answer)
@@ -214,7 +224,7 @@ speaker.on('finish', () => {
 		state.asking = null
 		//notify( () => {
 		speaker.emit('reset',
-			() => stt.emit('start')
+			() => {if(!state.asleep) stt.emit('start')}
 		)
 		//})
 	}

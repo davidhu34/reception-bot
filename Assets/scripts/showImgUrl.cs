@@ -36,12 +36,14 @@ public class showImgUrl : MonoBehaviour {
 		yield return img;
 		int iw = img.texture.width;
 		int ih = img.texture.height;
-		if (ih > 200) {
+		float r = (float)ih/(float)iw;
+		/*if (ih > 200) {
 			ih = 200;
 			iw = (int) (200f*(iw/ih));
 			Debug.Log (iw);
-		}
-		rt.sizeDelta = new Vector2 (600, 400);//(iw, ih);
+		}*/
+		Debug.Log (r);
+		rt.sizeDelta = new Vector2 (500, 500*r);//(iw, ih);
 		Texture2D tex = new Texture2D ((int)iw, (int)ih, TextureFormat.DXT1, false);
 		img.LoadImageIntoTexture (tex);
 		yield return tex;
