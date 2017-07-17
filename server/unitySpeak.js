@@ -45,6 +45,11 @@ speaker.on('display', media => {
 		console.log('wrote media for Unity: ', media)
 	})
 })
+speaker.on('status', status => {
+	fs.writeFile(statusPath, status, 'ucs2', err => {
+		if(err) throw err
+	})
+})
 
 speaker.on('reset', next => {
 	fs.writeFile(subtitlePath, " ", 'ucs2', err => {

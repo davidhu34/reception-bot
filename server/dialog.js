@@ -12,6 +12,13 @@ const notify = cb => {
 const validIfly = a => {
 	return a.indexOf('提倡文明語言') === -1
 }
+const greet = () => {
+	return [
+		'你好阿!需要幫忙嗎',
+		'哈囉，需要幫忙嗎',
+		'嗨，需要幫忙嗎'
+	][Math.floor(Math.random()*3)]
+}
 const unknown = () => {
 	return [
 		'不好意思這個我還沒學會呢，能再試試看嗎?',
@@ -58,11 +65,12 @@ waker.on('wake', (payload) => {
 		if(!payload) stt.emit('start')
 		else if(Object.keys(lines).length === 0) {
 			console.log('greeting:',payload.greeting)
+			state.asking = 'greet'
 			qs = {
 				watson: 'greeting',
 				ifly: 'greeting'
 			}
-			talker.emit('talk', payload.greeting)
+			talker.emit('talk', greet())
 		}
 	}
 
@@ -70,6 +78,7 @@ waker.on('wake', (payload) => {
 waker.on('sleep', () => {
 	if(!state.asleep) {
 		state.asleep = true
+		speaker.emit('status', 'sleeping')
 	}
 })
 
@@ -85,7 +94,9 @@ stt.on('result', result => {
 			}
 			state.speaking = true
 			state.asking = mid
+			speaker.emit('status', 'thinking')
 			speaker.emit('question', res)
+
 
 			const scripted = hardcode(res)
 			if (scripted) {
@@ -111,10 +122,8 @@ stt.on('result', result => {
 						console.log('5s time up watson')
 						qs.watson = 'noreply'
 						qs.ifly = 'noansewr'
-						/*const emitting = !w && !i? '不好意思這個我還沒學會呢，能再試試看嗎?': ''
-						talker.emit('talk', emitting)*/
-						if (!w && !i) talker.emit('talk', unknown())
-						else if (Object.keys(lines).length === 0) speaker.emit('finish')
+						/*if (!w && !i) talker.emit('talk', unknown())
+						else */if (Object.keys(lines).length === 0) speaker.emit('finish')
 					}
 				}, 4000)
 			}
@@ -233,6 +242,6 @@ speaker.on('finish', () => {
 })
 
 module.exports = {
-	wake: (payload) => waker.emit('wake', payload),
+	wake: () => waker.emit('wake'),
 	sleep: () => waker.emit('sleep')
 }

@@ -3,7 +3,7 @@ const { ttMP3 } = require('./googleTranslate')
 const dialog = require('./dialog')
 
 //dialog.sleep()
-dialog.wake(null)
+//dialog.wake()
 
 /*
 const fileName = 'test'
