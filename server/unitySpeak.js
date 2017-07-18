@@ -58,7 +58,7 @@ module.exports = state => {
 			else next()
 		})
 		setTimeout(() => {
-			fs.writeFile(statusPath, state.asleep?'sleeping':'listening', 'ucs2', err => {
+			fs.writeFile(statusPath, state.scripted? 'listening':state.asleep?'sleeping':'listening', 'ucs2', err => {
 				if (err) throw err
 			})
 			fs.writeFile(displayPath, 'null', 'ucs2', err => {

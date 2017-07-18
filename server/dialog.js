@@ -6,6 +6,7 @@ const player = require('play-sound')()
 const { watch, unwatch } = require('melanke-watchjs')
 
 let state = {
+	scripted: false,//true,
 	asleep: true,
 	speaking: false,
 	asking: null
@@ -177,6 +178,9 @@ iot.on('message', (topic, payloadBuffer) =>　{
 	} else if ( payload.wake !== undefined ) {
 		if (payload.wake) waker.emit('wake', payload)
 		else waker.emit('sleep')
+	} else if ( payload.line ) {
+		state.asking = 'script'
+		talker.emit('talk', payload.line)
 	}
 	
 })
@@ -230,15 +234,17 @@ speaker.on('finish', () => {
 			hasNext = true
 		}
 	})
+	const scripted = state.asking === 'script'
+	console.log('scripted:',scripted)
 	console.log('on finish:',qs.watson, qs.ifly, hasNext )
-	if (!hasNext && qs.watson && qs.ifly && state.asking) {
+	if (!hasNext && qs.watson && qs.ifly && state.asking || scripted) {
 		state.speaking = hasNext
 		state.asking = null
 		//notify( () => {
 		speaker.emit('reset', () => {
 			if(!state.asleep) {
 				stt.emit('start')
-				notify()
+				if (!scripted) notify()
 			}
 		})
 		//})
