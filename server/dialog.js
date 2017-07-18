@@ -2,6 +2,16 @@ const request = require('request')
 const events = require('events')
 class eventEmitter extends events {}
 const md5 = require('md5')
+const { watch, unwatch } = require('melanke-watchjs')
+
+let state = {
+	asleep: true,
+	speaking: false,
+	asking: null
+}
+let lines = {}
+let qs = {}
+
 /*const player = require('play-sound')()
 const notify = cb => {
 	player.play('./notify.mp3', {timeout: 1000}, err => {
@@ -26,11 +36,10 @@ const unknown = () => {
 		'抱歉，我還不會回答這個問題，也有可能是沒聽清楚喔'
 	][Math.floor(Math.random()*3)]
 }
-const { watch, unwatch } = require('melanke-watchjs')
 
 // event emitters
 const stt = require('./stt').javaStt()
-const speaker = require('./unitySpeak')
+const speaker = require('./unitySpeak')(state)
 const waker = new eventEmitter() // dummy waker
 const talker = new eventEmitter() 
 
@@ -42,13 +51,6 @@ const iot = require('./iot')
 const ifly = require('./iflyQA')()		
 const fbTextReply = require('./fbTextReply')
 
-let state = {
-	asleep: true,
-	speaking: false,
-	asking: null
-}
-let lines = {}
-let qs = {}
 
 const scripts = ['預設問句']
 const hardcode = q => {
@@ -94,11 +96,12 @@ stt.on('result', result => {
 			}
 			state.speaking = true
 			state.asking = mid
+			const q = res.replace(/吃面/ig,'吃麵')
 			speaker.emit('status', 'thinking')
-			speaker.emit('question', res)
+			speaker.emit('question', q)
 
 
-			const scripted = hardcode(res)
+			const scripted = hardcode(q)
 			if (scripted) {
 				let scriptLine = ''
 				switch(scripted) {
@@ -110,9 +113,9 @@ stt.on('result', result => {
 				talker.emit('talk', scriptLine)
 			} else {
 				//notify(()=>{})
-				console.log('to publish:', res)
-				iot.publish('iot-2/evt/text/fmt/json', JSON.stringify({data:res, mid:mid}) )
-				ifly.emit('q',res)
+				console.log('to publish:', q)
+				iot.publish('iot-2/evt/text/fmt/json', JSON.stringify({data:q, mid:mid}) )
+				ifly.emit('q',q)
 				setTimeout(() => {
 					console.log('timeout check', qs.watson? 1:0, qs.ifly? 1:0)
 					const w = qs.watson? true: false
@@ -232,9 +235,9 @@ speaker.on('finish', () => {
 		state.speaking = hasNext
 		state.asking = null
 		//notify( () => {
-		speaker.emit('reset',
-			() => {if(!state.asleep) stt.emit('start')}
-		)
+		speaker.emit('reset', () => {
+			if(!state.asleep) stt.emit('start')
+		})
 		//})
 	}
 	//if (!state.asleep)
