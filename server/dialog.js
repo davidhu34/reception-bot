@@ -2,6 +2,7 @@ const request = require('request')
 const events = require('events')
 class eventEmitter extends events {}
 const md5 = require('md5')
+const player = require('play-sound')()
 const { watch, unwatch } = require('melanke-watchjs')
 
 let state = {
@@ -12,13 +13,12 @@ let state = {
 let lines = {}
 let qs = {}
 
-/*const player = require('play-sound')()
 const notify = cb => {
 	player.play('./notify.mp3', {timeout: 1000}, err => {
 		if(err) console.log('notify sound err:', err)
-		else cb()
+		else if (cb) cb()
 	})
-}*/
+}
 const validIfly = a => {
 	return a.indexOf('提倡文明語言') === -1
 }
@@ -112,7 +112,7 @@ stt.on('result', result => {
 				//notify(()=>{})
 				talker.emit('talk', scriptLine)
 			} else {
-				//notify(()=>{})
+				notify()
 				console.log('to publish:', q)
 				iot.publish('iot-2/evt/text/fmt/json', JSON.stringify({data:q, mid:mid}) )
 				ifly.emit('q',q)
@@ -236,7 +236,10 @@ speaker.on('finish', () => {
 		state.asking = null
 		//notify( () => {
 		speaker.emit('reset', () => {
-			if(!state.asleep) stt.emit('start')
+			if(!state.asleep) {
+				stt.emit('start')
+				notify()
+			}
 		})
 		//})
 	}
