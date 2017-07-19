@@ -81,7 +81,7 @@ waker.on('wake', (payload) => {
 waker.on('sleep', () => {
 	if(!state.asleep) {
 		state.asleep = true
-		speaker.emit('status', 'sleeping')
+		//speaker.emit('status', 'sleeping')
 	}
 })
 

@@ -15,7 +15,7 @@ module.exports = state => {
 	const speaker = new eventEmitter()
 	speaker.on('question', q => {
 		const line = 'Q:\"'+q+'\"'
-		fs.writeFile(subtitlePath, q, 'ucs2', err => {
+		fs.writeFile(subtitlePath, line/*'thinking'*/, 'ucs2', err => {
 			if (err) throw err
 		})
 	})
@@ -34,9 +34,9 @@ module.exports = state => {
 			fs.writeFile(subtitlePath, line, 'ucs2', err => {
 				if (err) throw err
 			})
-			fs.writeFile(statusPath, 'speaking', 'ucs2', err => {
+			/*fs.writeFile(statusPath, 'speaking', 'ucs2', err => {
 				if (err) throw err
-			})
+			})*/
 		})
 	})
 
@@ -53,14 +53,19 @@ module.exports = state => {
 	})
 
 	speaker.on('reset', next => {
-		fs.writeFile(subtitlePath, " ", 'ucs2', err => {
-			if (err) throw err
-			else next()
-		})
-		setTimeout(() => {
-			fs.writeFile(statusPath, state.scripted? 'listening':state.asleep?'sleeping':'listening', 'ucs2', err => {
+		fs.writeFile(
+			subtitlePath,
+			state.scripted? '-----listening-----'
+				:state.asleep?'sleeping':'-----listening-----',
+			'ucs2', err => {
 				if (err) throw err
-			})
+				else next()
+			}
+		)
+		setTimeout(() => {
+			/*fs.writeFile(statusPath, state.scripted? 'listening':state.asleep?'sleeping':'listening', 'ucs2', err => {
+				if (err) throw err
+			})*/
 			fs.writeFile(displayPath, 'null', 'ucs2', err => {
 				if (err) throw err
 			})
