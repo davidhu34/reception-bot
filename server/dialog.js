@@ -13,7 +13,12 @@ let state = {
 }
 let lines = {}
 let qs = {}
-
+/*let timer = 0
+setInterval(() => {
+	if (timer > 0) timer--
+	else waker.emit('sleep')
+}, 1000)
+*/
 const notify = cb => {
 	player.play('./notify.mp3', {timeout: 1000}, err => {
 		if(err) console.log('notify sound err:', err)
@@ -176,8 +181,10 @@ iot.on('message', (topic, payloadBuffer) =>　{
 			talker.emit('talk', '')
 		}	
 	} else if ( payload.wake !== undefined ) {
-		if (payload.wake) waker.emit('wake', payload)
-		else waker.emit('sleep')
+		if (payload.wake) {
+			//timer = 20
+			waker.emit('wake', payload)
+		} else waker.emit('sleep')
 	} else if ( payload.line ) {
 		state.asking = 'script'
 		talker.emit('talk', payload.line)

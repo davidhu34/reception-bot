@@ -28,6 +28,7 @@ public class runSalsa : MonoBehaviour {
 	private Salsa3D salsa3D;
 	private Animator anim;
 	private RandomEyes3D eyes;
+	private string doubleSafe;
 
 	void configSalsa () {
 		// Salsa3D
@@ -50,20 +51,25 @@ public class runSalsa : MonoBehaviour {
 	IEnumerator nextAudio () {
 		txtfile = new WWW("file://" + txtDir);
 		yield return txtfile;
+		string t = txtfile.text;
+		Debug.Log(t);
+		if(t != doubleSafe) {
+			doubleSafe = t;
+			www = new WWW("file://" + clipDir + t);
+			myAudioClip = www.GetAudioClip();
+			yield return www;
+			while(!myAudioClip.isReadyToPlay){}
 
-		www = new WWW("file://" + clipDir + txtfile.text);
-		myAudioClip = www.GetAudioClip();
-		yield return www;
-		while(!myAudioClip.isReadyToPlay){}
-
-		salsa3D.SetAudioClip(myAudioClip);
-		audioReady = true;
+			salsa3D.SetAudioClip(myAudioClip);
+			audioReady = true;
+		}
 		making = false;
 	}
 
 	[PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
 	void Start()
 	{
+		doubleSafe = "";
 		clipDir = Application.dataPath.Substring(0, Application.dataPath.LastIndexOf("/")) + "/wavs/";
 		txtDir = Application.dataPath.Substring(0, Application.dataPath.LastIndexOf("/")) + "/wavs/playing.txt";
 		oldTime = File.GetLastWriteTimeUtc(txtDir);

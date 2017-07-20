@@ -31,7 +31,7 @@ public class showImgUrl : MonoBehaviour {
 			url = ibm;
 		if (url [0] == '/')
 			url = "file://" + path + "/cfimg" + url;
-		Debug.Log (url);
+		//Debug.Log (url);
 		img = new WWW(url);
 		yield return img;
 		int iw = img.texture.width;
@@ -42,7 +42,7 @@ public class showImgUrl : MonoBehaviour {
 			iw = (int) (200f*(iw/ih));
 			Debug.Log (iw);
 		}*/
-		Debug.Log (r);
+		//Debug.Log (r);
 		rt.sizeDelta = new Vector2 (500, 500*r);//(iw, ih);
 		Texture2D tex = new Texture2D ((int)iw, (int)ih, TextureFormat.DXT1, false);
 		img.LoadImageIntoTexture (tex);
