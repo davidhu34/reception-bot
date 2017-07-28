@@ -79,6 +79,8 @@ module.exports = payload => {
 		case 'hsr':
 			speech = data.hsr
 			break
+		case 'food':
+		case 'music':
 		case 'text':
 		default:
 			speech = (data.text)?data.text: 'nulltext'

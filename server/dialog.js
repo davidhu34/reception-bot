@@ -25,6 +25,12 @@ const notify = cb => {
 		else if (cb) cb()
 	})
 }
+const sing = cb => {
+	player.play('./song.mp3', err => {
+		if(err) console.log('singing err:', err)
+		else if (cb) cb()
+	})
+}
 const validIfly = a => {
 	return a.indexOf('提倡文明語言') === -1
 }
@@ -153,7 +159,13 @@ iot.on('message', (topic, payloadBuffer) =>　{
 
 
 		if (speech && speech !== 'nulltext' && mid === state.asking && state.speaking && speech.length < 70) {
-		  	if(payload.type === 'restaurant' || payload.type === 'location') qs.ifly = 'iot'
+		  	if (payload.type === 'restaurant' || payload.type === 'location')
+		  		qs.ifly = 'iot'
+		  	else if (speech.indexOf('唱歌') > -1) {
+		  		console.log('sing')
+		  		qs.ifly = 'sing'
+		  		state.asking = 'sing'
+		  	}
 		  	qs.watson = speech
 			request.post({
 			  headers: {'content-type' : 'application/x-www-form-urlencoded'},
@@ -245,15 +257,20 @@ speaker.on('finish', () => {
 	console.log('scripted:',scripted)
 	console.log('on finish:',qs.watson, qs.ifly, hasNext )
 	if (!hasNext && qs.watson && qs.ifly && state.asking || scripted) {
-		state.speaking = hasNext
-		state.asking = null
 		//notify( () => {
-		speaker.emit('reset', () => {
-			if(!state.asleep) {
-				stt.emit('start')
-				if (!scripted) notify()
-			}
-		})
+		const end = () => {
+			state.speaking = hasNext
+			state.asking = null
+			speaker.emit('reset', () => {
+				if(!state.asleep) {
+					stt.emit('start')
+					if (!scripted) notify()
+				}
+			})
+		}
+		if(state.asking === 'sing'){
+			sing(end)
+		} else end()		
 		//})
 	}
 	//if (!state.asleep)
