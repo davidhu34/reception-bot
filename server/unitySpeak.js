@@ -2,11 +2,11 @@ const wfi = require('wav-file-info')
 const fs = require('fs')
 const events = require('events')
 class eventEmitter extends events {}
-const { wavPath, speakPath, subtitlePath, displayPath, statusPath } = require('./configs')
+const { wavPath, speakPath, subtitlePath, displayPath, statusPath } = require('../configs')
 const player = require('play-sound')()
 
 module.exports = state => {
-	const play = dir => 
+	const play = dir =>
 		player.play(dir, err => {
 			if (err) console.log('notify sound err:', err)
 			else speaker.emit('finish')

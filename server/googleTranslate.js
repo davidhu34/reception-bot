@@ -2,7 +2,7 @@ const fs = require('fs')
 const request = require('request')
 const qstr = require('querystring')
 
-const { mp3Path, wavPath } = require('./configs')
+const { mp3Path, wavPath } = require('../configs')
 
 const ttMP3 = (text, fileName) => new Promise( (resolve, reject) => {
 	const params = {
@@ -26,7 +26,7 @@ const ttMP3 = (text, fileName) => new Promise( (resolve, reject) => {
 	}).on('err', err => {
 		reject('Google translate API err: ' + err)
 	}).pipe(writeStream)
-	
+
 })
 
 module.exports = {

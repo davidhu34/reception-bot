@@ -1,5 +1,5 @@
 const ffmpeg = require('fluent-ffmpeg')
-const { mp3Path, wavPath, ffmpegPath, ffprobePath } = require('./configs')
+const { mp3Path, wavPath, ffmpegPath, ffprobePath } = require('../configs')
 
 const convert = (file, toWav) => new Promise( (resolve, reject) => {
 	let source = ''

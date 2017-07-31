@@ -3,7 +3,7 @@ const exec = cp.exec
 const events = require('events')
 class eventEmitter extends events {}
 
-const { sttPath } = require('./configs')
+const { sttPath } = require('../configs')
 
 module.exports = {
 	javaStt: () => {

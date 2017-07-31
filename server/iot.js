@@ -1,6 +1,6 @@
 const mqtt = require('mqtt')
 
-const configs = require('./configs.js')
+const configs = require('../configs.js')
 
 const m = configs.mqtt
 console.log(m)

@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using UnityEngine.Windows;
 
 using CrazyMinnow.SALSA; // Import SALSA from the CrazyMinnow namespace
-using CrazyMinnow.SALSA.MCS;
+//using CrazyMinnow.SALSA.MCS;
 
 public class runSalsa : MonoBehaviour {
 	//public CM_MCSSync mcs;
@@ -76,7 +76,7 @@ public class runSalsa : MonoBehaviour {
 		anim = GetComponent<Animator>();
 
 		configSalsa ();
-		StartCoroutine( nextAudio() );
+		//StartCoroutine( nextAudio() );
 	}
 
 	void Update()

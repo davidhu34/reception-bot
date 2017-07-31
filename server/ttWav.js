@@ -2,7 +2,7 @@ const md5 = require('md5')
 const fs = require('fs')
 const { MP3toWAV, WAVtoMP3 } = require('./ffmpeg')
 const { ttMP3 } = require('./googleTranslate')
-const { wavPath } = require('./configs')
+const { wavPath } = require('../configs')
 
 //const fileName = 'test'
 //const content = '九四八七九四狂'
