@@ -53,14 +53,14 @@ const unknown = () => {
 const stt = require('./stt').javaStt()
 const speaker = require('./unitySpeak')(state)
 const waker = new eventEmitter() // dummy waker
-const talker = new eventEmitter() 
+const talker = new eventEmitter()
 
 // promises
 const ttWav = require('./ttWav')
 
 
 const iot = require('./iot')
-const ifly = require('./iflyQA')()		
+const ifly = require('./iflyQA')()
 const fbTextReply = require('./fbTextReply')
 
 
@@ -161,11 +161,11 @@ iot.on('message', (topic, payloadBuffer) =>　{
 		if (speech && speech !== 'nulltext' && mid === state.asking && state.speaking && speech.length < 70) {
 		  	if (payload.type === 'restaurant' || payload.type === 'location')
 		  		qs.ifly = 'iot'
-		  	else if (speech.indexOf('唱歌') > -1) {
+		  	/*else if (speech.indexOf('唱歌') > -1) {
 		  		console.log('sing')
 		  		qs.ifly = 'sing'
 		  		state.asking = 'sing'
-		  	}
+		  	}*/
 		  	qs.watson = speech
 			request.post({
 			  headers: {'content-type' : 'application/x-www-form-urlencoded'},
@@ -191,7 +191,7 @@ iot.on('message', (topic, payloadBuffer) =>　{
 		} else if ( payload.type !== 'review' && state.speaking && mid === state.asking) {
 			qs.watson = 'nullreply'
 			talker.emit('talk', '')
-		}	
+		}
 	} else if ( payload.wake !== undefined ) {
 		if (payload.wake) {
 			//timer = 20
@@ -201,7 +201,7 @@ iot.on('message', (topic, payloadBuffer) =>　{
 		state.asking = 'script'
 		talker.emit('talk', payload.line)
 	}
-	
+
 })
 
 ifly.on('iot', res => {
@@ -239,7 +239,7 @@ talker.on('talk', (line, media) => {
 		}
 		console.log('ttWav success:', line, name)
 		watch(lines, id, cue)
-		lines[id] = Object.keys(lines).length-1	
+		lines[id] = Object.keys(lines).length-1
 	})
 })
 
@@ -270,7 +270,7 @@ speaker.on('finish', () => {
 		}
 		if(state.asking === 'sing'){
 			sing(end)
-		} else end()		
+		} else end()
 		//})
 	}
 	//if (!state.asleep)
